@@ -19,7 +19,6 @@ from app.utils.calendar_utils import (
 
 router = APIRouter()
 
-# Program endpoints
 @router.post("/programs/", response_model=ProgramSchema)
 def create_program(program: ProgramCreate, db: Session = Depends(get_db)):
     db_program = Program(**program.dict())
@@ -37,7 +36,8 @@ def get_program(program_id: int, db: Session = Depends(get_db)):
     program = db.query(Program).filter(Program.id == program_id).first()
     if not program:
         raise HTTPException(status_code=404, detail="Program not found")
-    return program
+# But FastAPI sees that you’ve declared response_model=ProgramSchema, so it uses Pydantic to convert the SQLAlchemy object to a JSON-compatible dict.
+#     return program
 
 # Activity endpoints
 @router.post("/activities/", response_model=ActivitySchema)
